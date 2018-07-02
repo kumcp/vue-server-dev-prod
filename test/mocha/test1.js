@@ -11,9 +11,9 @@ describe('Array function', function () {
             assert.isAbove(indexOfItem, -1)
         });
 
-        it('Example fail case', function () {
-            let indexOfItem = [1, 2, 3].indexOf(2)
-            assert.equal(indexOfItem == -1, true)
-        });
+        // it('Example fail case', function () {
+        //     let indexOfItem = [1, 2, 3].indexOf(2)
+        //     assert.equal(indexOfItem == -1, true)
+        // });
     });
 });

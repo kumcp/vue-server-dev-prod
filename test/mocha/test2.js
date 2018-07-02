@@ -10,8 +10,8 @@ describe('String function', function () {
             assert.equal("Hello world".includes("world2"), false);
         });
 
-        it('Example fail case', function () {
-            assert.equal("Hello world".includes("world2"), true);
-        });
+        // it('Example fail case', function () {
+        //     assert.equal("Hello world".includes("world2"), true);
+        // });
     });
 });
