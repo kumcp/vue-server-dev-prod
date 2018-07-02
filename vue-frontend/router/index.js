@@ -8,7 +8,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/test/a',
+      path: '/vue/a',
       name: 'HelloWorld',
       component: HelloWorld
     }
