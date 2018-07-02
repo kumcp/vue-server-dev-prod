@@ -18,4 +18,6 @@ jobs:
 
     steps:
       - checkout
-      - run: echo "OK"
+      - run: npm install
+
+      - run: ./node_modules/mocha/bin/mocha ./test/mocha/
