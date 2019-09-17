@@ -9,8 +9,11 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "bootstrap": "^4.3.1",
     "core-js": "^2.6.5",
     "express": "^4.17.1",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.15.0",
     "register-service-worker": "^1.6.2",
     "serve-static": "^1.14.1",
     "vue": "^2.6.10",
