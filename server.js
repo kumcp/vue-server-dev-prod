@@ -1,43 +1,13 @@
 const express = require('express');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const config = require('./config/index')
-const path = require("path");
+
+const serveStatic = require('serve-static');
 
 const app = express();
-const webpackConfig = require('./build/webpack.server.conf.js');
-const compiler = webpack(webpackConfig);
+app.use(serveStatic(`${__dirname}/dist`));
 
-// configuration file as a base.
+const port = process.env.PORT || 5000;
+const hostname = '127.0.0.1';
 
-app.get("/", function (req, res) {
-    res.json("ok")
-})
-
-app.use(webpackDevMiddleware(compiler, {
-    publicPath: webpackConfig.output.publicPath,
-}));
-
-
-
-// All route has the prefix /vue/* will lead to vue (the rest will let vue-router handle)
-
-app.use("/vue/*", function (req, res, next) {
-    var filename = path.join(compiler.outputPath, 'index.html');
-    compiler.outputFileSystem.readFile(filename, function (err, result) {
-        if (err) {
-            return next(err);
-        }
-        res.set('content-type', 'text/html');
-        res.send(result);
-        res.end();
-    });
-});
-
-// Serve the files on port 8081.
-const PORT = config.dev.port
-app.listen(PORT, function () {
-    console.log("--------------------------")
-    console.log('Application is listening on port: ' + PORT + '!\n');
-    console.log("--------------------------")
+app.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
 });
