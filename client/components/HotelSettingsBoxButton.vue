@@ -15,6 +15,9 @@
                 <!-- Settings box component -->
                 <hotel-settings-box
                     v-show="showHotelSettingBox"
+                    :title="'Create hotel with settings'"
+                    :destinationHotel="destinationHotel"
+                    :hotelList="hotelList"
                     @backPreviousPage="backClicked"
                     @applied="applyHotelSettings"
                 ></hotel-settings-box>
@@ -28,7 +31,51 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import HotelSettingsBox from './HotelSettingsBox.vue';
 
 export default {
-    props: {},
+    props: {
+        hotelList: {
+            type: [Array],
+            required: false,
+            validator(val) {
+                if (val[0]) {
+                    return val[0].id && val[0].name;
+                }
+                return false;
+            },
+            default: () => {
+                // Default value for test
+                console.error('HotelSettingsBoxButton: Missing hotelList. Generated default');
+
+                return [
+                    { id: 1, name: 'hotel1' },
+                    { id: 2, name: 'xaa' },
+                    { id: 3, name: 'hotel3' },
+                    { id: 4, name: 'bbb' },
+                    { id: 5, name: 'hotel5' },
+                    { id: 6, name: 'aaaa' },
+                    { id: 7, name: 'hotel7' },
+                    { id: 8, name: 'bb55' },
+                    { id: 9, name: 'hotel9' },
+                    { id: 10, name: 'fujutakanko' },
+                    { id: 11, name: 'fujitakankotest' },
+                    { id: 12, name: 'hotel12' }
+                ];
+            }
+        },
+        destinationHotel: {
+            type: [Object],
+            required: true,
+            validator(val) {
+                return val.name;
+            },
+            default: () => {
+                console.error(
+                    'HotelSettingsBoxButton: Missing destinationHotel. Generated default'
+                );
+
+                return { name: 'destinationhotel' };
+            }
+        }
+    },
     components: {
         HotelSettingsBox
     },

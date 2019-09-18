@@ -61,9 +61,7 @@ export default {
             },
             default: () => {
                 // Default value for test
-                console.error(
-                    'You are missing hotelList param for HotelSearchBar. Generated default'
-                );
+                console.error('HotelSearchBar: Missing hotelList. Generated default');
 
                 return [
                     { id: 1, name: 'hotel1' },
@@ -95,14 +93,14 @@ export default {
             this.$emit('selectedHotel', this.selectedHotel);
         },
         selectHotelId(hotelId) {
-            const hotelSelected = this.hotelList.find(hotel => hotel.id === hotelId);
+            const hotelSelected = this.hotelList.find(hotel => hotel.id === parseInt(hotelId, 10));
             this.selecteHotel(hotelSelected);
         },
         selectHotelName(hotelName) {
             const hotelSelected = this.hotelList.filter(hotel => hotel.name === hotelName);
             this.showHotelList = false;
             if (hotelSelected.length === 1) {
-                this.selecteHotel(hotelSelected);
+                this.selecteHotel(hotelSelected[0]);
             }
         },
         showSuggestList() {

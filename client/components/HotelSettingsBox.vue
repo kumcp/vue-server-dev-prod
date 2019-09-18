@@ -88,13 +88,58 @@ import CheckBox from './Input/CheckBox.vue';
 export default {
     name: 'hotelSettingsBox',
     props: {
-        // title: {
-        //     type: [String],
-        //     required: true,
-        //     validator() {
-        //         return true;
-        //     }
-        // }
+        title: {
+            type: [String],
+            required: true,
+            validator() {
+                return true;
+            },
+            default: () => {
+                console.error('HotelSettingBox: Missing title. Generated default');
+                return 'Create item';
+            }
+        },
+        hotelList: {
+            type: [Array],
+            required: false,
+            validator(val) {
+                if (val[0]) {
+                    return val[0].id && val[0].name;
+                }
+                return false;
+            },
+            default: () => {
+                // Default value for test
+                console.error('HotelSettingsBox: Missing hotelList. Generated default');
+
+                return [
+                    { id: 1, name: 'hotel1' },
+                    { id: 2, name: 'xaa' },
+                    { id: 3, name: 'hotel3' },
+                    { id: 4, name: 'bbb' },
+                    { id: 5, name: 'hotel5' },
+                    { id: 6, name: 'aaaa' },
+                    { id: 7, name: 'hotel7' },
+                    { id: 8, name: 'bb55' },
+                    { id: 9, name: 'hotel9' },
+                    { id: 10, name: 'fujutakanko' },
+                    { id: 11, name: 'fujitakankotest' },
+                    { id: 12, name: 'hotel12' }
+                ];
+            }
+        },
+        destinationHotel: {
+            type: [Object],
+            required: true,
+            validator(val) {
+                return val.name;
+            },
+            default: () => {
+                console.error('HotelSettingsBox: Missing destinationHotel. Generated default');
+
+                return { name: 'destinationhotel' };
+            }
+        }
     },
     components: {
         FileInput,
@@ -104,16 +149,9 @@ export default {
     created() {},
     data() {
         return {
-            title: 'Create item',
             settingSource: {
                 type: 'hotel' // Setting source type default
             },
-            destinationHotel: {},
-            hotelList: [
-                { id: 1, name: 'hotel1' },
-                { id: 2, name: 'hotel2' },
-                { id: 3, name: 'hotel3' }
-            ],
             copyCheckList: [
                 { label: 'Tag list', name: 'taglist', value: true },
                 { label: 'Service', name: 'service', value: true },
@@ -129,10 +167,11 @@ export default {
     methods: {
         updateSettingSourceFile(fileObject) {
             this.settingSource.file = fileObject;
-            console.log('HotelSettingsBox: Added settings source file');
+            console.log('HotelSettingsBox: Added settings source file: ', this.settingSource);
         },
         updateSettingSourceHotel(hotelObject) {
             this.settingSource.hotel = hotelObject;
+            console.log('HotelSettingsBox: Added settings source hotel: ', this.settingSource);
         },
         backPreviousPage() {
             this.$emit('backPreviousPage');

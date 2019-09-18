@@ -8,7 +8,7 @@
                     aria-describedby="inputFile"
                     @change="handleFileSelected"
                 />
-                <label class="custom-file-label" for="inputGroupFile01">{{
+                <label class="custom-file-label">{{
                     placeholder || 'Choose template file to upload'
                 }}</label>
             </div>
@@ -38,11 +38,20 @@ export default {
     },
     methods: {
         handleFileSelected(e) {
-            console.log('FileInput: emit fileSelected', e.target.files[0]);
+            const fileSelected = e.target.files[0];
+            this.placeholder = fileSelected.name;
+            if (!this.hasFileSelectedListener) {
+                console.warn('FileInput: Missing listener `fileSelected`');
+            }
             this.$emit('fileSelected', {
                 fileId: this.fileId,
-                file: e.target.files[0]
+                file: fileSelected
             });
+        }
+    },
+    computed: {
+        hasFileSelectedListener() {
+            return this.$listeners && this.$listeners.fileSelected;
         }
     }
 };

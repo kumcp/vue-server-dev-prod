@@ -5,34 +5,26 @@
                 <h5 class="card-title">{{ title || 'Title' }}</h5>
                 <div class="card-header-button">
                     <button
+                        v-if="downloadButtonText"
                         type="button"
                         class="btn btn-outline-primary"
                         @click="onDownloadClicked"
                     >
-                        {{ downloadButtonText || 'Download' }}
+                        {{ downloadButtonText }}
                     </button>
-                    <button type="button" class="btn btn-outline-primary" @click="onUploadClicked">
-                        {{ uploadButtonText || 'Upload' }}
+                    <button
+                        v-if="uploadButtonText"
+                        type="button"
+                        class="btn btn-outline-primary"
+                        @click="onUploadClicked"
+                    >
+                        {{ uploadButtonText }}
                     </button>
                 </div>
             </div>
 
             <div class="card-body">
-                <div class="file-input">
-                    <div class="input-group mb-3">
-                        <div class="custom-file">
-                            <input
-                                type="file"
-                                class="custom-file-input"
-                                id="inputFile"
-                                aria-describedby="inputFile"
-                            />
-                            <label class="custom-file-label" for="inputGroupFile01">{{
-                                placeholder || 'Choose template file to upload'
-                            }}</label>
-                        </div>
-                    </div>
-                </div>
+                <file-input :fileId="templateId" @fileSelected="onFileSelected"></file-input>
             </div>
         </div>
     </div>
@@ -40,50 +32,86 @@
 
 <script>
 import 'bootstrap/dist/css/bootstrap.min.css';
+import FileInput from './Input/FileInput.vue';
 
 export default {
     name: 'templateExporting',
+    components: {
+        FileInput
+    },
     props: {
         title: {
             type: [String],
             required: true,
-            validator() {
-                return true;
+            default: () => {
+                console.error('TemplateExporting: Missing title. Generated default');
+                return 'Title';
+            }
+        },
+        templateId: {
+            type: String,
+            require: true,
+            default() {
+                console.error('TemplateExporting: Missing templateId. Generated default');
+                return 'exampleTemplateId';
             }
         },
         placeholder: {
-            type: [String],
-            required: true,
-            validator() {
-                return true;
+            type: String,
+            required: false,
+            default() {
+                console.warn('TemplateExporting: Using default placeholder');
+                return 'Choose file';
             }
         },
         downloadButtonText: {
-            type: [String],
-            required: true,
-            validator() {
-                return true;
+            type: String,
+            default() {
+                return 'Download';
             }
         },
         uploadButtonText: {
-            type: [String],
-            required: true,
-            validator() {
-                return true;
+            type: String,
+            default() {
+                return 'Upload';
             }
         }
     },
     data() {
-        return {};
+        return {
+            file: {}
+        };
     },
     methods: {
+        onFileSelected(fileObject) {
+            this.file = fileObject;
+            if (!this.hasFileSelectedListener) {
+                console.warn('TemplateExporting: Missing listener fileSelected:', fileObject);
+            }
+            return this.$emit('fileSelected', fileObject);
+        },
         onUploadClicked() {
-            console.log('Emitted uploadClicked');
+            if (!this.hasUploadListener) {
+                console.warn('TemplateExporting: Missing listener uploadClicked', this.file);
+            }
             return this.$emit('uploadClicked');
         },
         onDownloadClicked() {
-            console.log('Emitted downloadClicked');
+            if (!this.hasDownloadListener) {
+                console.warn('TemplateExporting: Missing listener downloadClicked');
+            }
             return this.$emit('downloadClicked');
+        }
+    },
+    computed: {
+        hasDownloadListener() {
+            return this.$listeners && this.$listeners.downloadClicked;
+        },
+        hasUploadListener() {
+            return this.$listeners && this.$listeners.uploadClicked;
+        },
+        hasFileSelectedListener() {
+            return this.$listeners && this.$listeners.fileSelected;
         }
     }
 };
