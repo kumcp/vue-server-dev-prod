@@ -2,17 +2,17 @@
     <div class="template-exporting">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title">{{ title }}</h5>
+                <h5 class="card-title">{{ title || 'Title' }}</h5>
                 <div class="card-header-button">
                     <button
                         type="button"
                         class="btn btn-outline-primary"
                         @click="onDownloadClicked"
                     >
-                        {{ downloadButtonText }}
+                        {{ downloadButtonText || 'Download' }}
                     </button>
                     <button type="button" class="btn btn-outline-primary" @click="onUploadClicked">
-                        {{ uploadButtonText }}
+                        {{ uploadButtonText || 'Upload' }}
                     </button>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                                 aria-describedby="inputFile"
                             />
                             <label class="custom-file-label" for="inputGroupFile01">{{
-                                placeholder
+                                placeholder || 'Choose template file to upload'
                             }}</label>
                         </div>
                     </div>
@@ -42,20 +42,48 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default {
+    name: 'templateExporting',
+    props: {
+        title: {
+            type: [String],
+            required: true,
+            validator() {
+                return true;
+            }
+        },
+        placeholder: {
+            type: [String],
+            required: true,
+            validator() {
+                return true;
+            }
+        },
+        downloadButtonText: {
+            type: [String],
+            required: true,
+            validator() {
+                return true;
+            }
+        },
+        uploadButtonText: {
+            type: [String],
+            required: true,
+            validator() {
+                return true;
+            }
+        }
+    },
     data() {
-        return {
-            title: 'Featured',
-            placeholder: 'Choose template file to upload',
-            downloadButtonText: 'Download',
-            uploadButtonText: 'Upload'
-        };
+        return {};
     },
     methods: {
         onUploadClicked() {
-            console.log('Clicked on Upload');
+            console.log('Emitted uploadClicked');
+            return this.$emit('uploadClicked');
         },
         onDownloadClicked() {
-            console.log('Clicked on Download');
+            console.log('Emitted downloadClicked');
+            return this.$emit('downloadClicked');
         }
     }
 };
