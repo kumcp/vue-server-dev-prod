@@ -16,6 +16,7 @@
                 <hotel-settings-box
                     v-show="showHotelSettingBox"
                     @backPreviousPage="backClicked"
+                    @applied="applyHotelSettings"
                 ></hotel-settings-box>
             </div>
         </div>
@@ -44,6 +45,10 @@ export default {
         },
         backClicked() {
             this.showHotelSettingBox = false;
+        },
+        applyHotelSettings(objectApplied) {
+            console.log('HotelSettingsBoxButton: emited appliedChangeSetting', objectApplied);
+            this.$emit('appliedChangeSetting', objectApplied);
         }
     }
 };

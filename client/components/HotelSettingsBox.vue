@@ -19,6 +19,7 @@
                     <div class="setting-source-info">
                         <div v-if="settingSource.type === 'hotel'">
                             <hotel-search-bar
+                                :hotelList="hotelList"
                                 @selectedHotel="updateSettingSourceHotel"
                             ></hotel-search-bar>
                         </div>
@@ -30,6 +31,49 @@
                             ></file-input>
                         </div>
                     </div>
+
+                    <hr />
+                    <div class="destination-info input-group">
+                        <span class="form-control">Settings will be copied to: </span>
+                        <input
+                            class="form-control"
+                            type="disabled"
+                            :value="destinationHotel.name"
+                        />
+                    </div>
+
+                    <div class="check-list-copy">
+                        <check-box
+                            v-for="(item, index) in copyCheckList"
+                            :class="{
+                                left: index % 2 === 0,
+                                right: index % 2 !== 0,
+                                cell: true
+                            }"
+                            :label="item.label"
+                            :name="item.name"
+                            :key="item.name"
+                            v-model="item.value"
+                        ></check-box>
+                    </div>
+
+                    <hr />
+                    <div class="button-group">
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary"
+                            @click="backPreviousPage"
+                        >
+                            {{ 'Cancel' }}
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary"
+                            @click="onApplyClicked"
+                        >
+                            {{ 'Apply' }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -39,6 +83,7 @@
 <script>
 import FileInput from './Input/FileInput.vue';
 import HotelSearchBar from './HotelSettings/HotelSearchBar.vue';
+import CheckBox from './Input/CheckBox.vue';
 
 export default {
     name: 'hotelSettingsBox',
@@ -53,7 +98,8 @@ export default {
     },
     components: {
         FileInput,
-        HotelSearchBar
+        HotelSearchBar,
+        CheckBox
     },
     created() {},
     data() {
@@ -62,63 +108,72 @@ export default {
             settingSource: {
                 type: 'hotel' // Setting source type default
             },
+            destinationHotel: {},
             hotelList: [
                 { id: 1, name: 'hotel1' },
                 { id: 2, name: 'hotel2' },
                 { id: 3, name: 'hotel3' }
+            ],
+            copyCheckList: [
+                { label: 'Tag list', name: 'taglist', value: true },
+                { label: 'Service', name: 'service', value: true },
+                { label: 'FAQ', name: 'faw', value: true },
+                { label: 'Crawling', name: 'crawling', value: true },
+                { label: 'Place', name: 'place', value: true },
+                { label: 'Welcome messages', name: 'guide', value: true },
+                { label: 'Category', name: 'category', value: true },
+                { label: 'Custom sentences', name: 'sentence', value: true }
             ]
         };
     },
     methods: {
         updateSettingSourceFile(fileObject) {
             this.settingSource.file = fileObject;
+            console.log('HotelSettingsBox: Added settings source file');
         },
         updateSettingSourceHotel(hotelObject) {
             this.settingSource.hotel = hotelObject;
         },
         backPreviousPage() {
             this.$emit('backPreviousPage');
+        },
+        onApplyClicked() {
+            this.$emit('applied', {
+                settingSource: this.settingSource,
+                destinationHotel: this.destinationHotel,
+                copyCheckList: this.copyCheckListSelected
+            });
+        }
+    },
+    computed: {
+        copyCheckListSelected() {
+            return this.copyCheckList.filter(item => item.value).map(item => item.name);
         }
     }
 };
 </script>
 
 <style scoped>
-*:focus {
-    outline: none;
+.btn {
+    margin: 0.5em;
 }
 
-.passed {
-    background-color: #d7d7d7;
+hr {
+    clear: both;
 }
 
-.passed .history-button {
-    border-color: #aaaaaa;
-    background-color: #aaaaaa;
+.cell {
+    width: 50%;
+    display: block;
+    padding: 0.5em 0;
 }
 
-.error {
-    border: 4px solid #f27871 !important;
+.left {
+    float: left;
 }
 
-.message {
-    padding: 0.5em;
-    margin: 0.5em 0;
-}
-
-.success-message {
-    color: #498e8f;
-    background-color: #8fb8b9;
-}
-
-.error-message {
-    color: #942718;
-    background-color: #e9796a;
-}
-
-.neutral-message {
-    color: #fff498;
-    background-color: #ffc107;
+.right {
+    float: right;
 }
 
 .title {
@@ -129,12 +184,6 @@ export default {
     line-height: normal;
     letter-spacing: normal;
     color: #459090;
-}
-
-button:hover,
-button:focus {
-    background-color: #459090;
-    border: 4px solid #459090;
 }
 
 .gray-background,
@@ -148,15 +197,6 @@ button:focus {
     z-index: 99;
 }
 
-.reminder-text-box,
-.reminder-time-set-box {
-    width: 100%;
-}
-
-.reminder-text-box {
-    padding: 0.5em 0;
-}
-
 .box-wrapper {
     top: 10vh;
     position: fixed;
@@ -166,82 +206,6 @@ button:focus {
     max-width: 795px;
     min-width: 300px;
     border-radius: 10px;
-}
-
-.reminder-text {
-    padding: 0.5em;
-    width: 100%;
-    height: 6em;
-    border-radius: 8px;
-    background-color: #ffffff;
-    resize: none;
-    border: solid 5px #8bb9b9;
-}
-
-.reminder-text:focus {
-    border: 4px solid #45908f;
-}
-
-.reminder-set-box {
-    margin: 0.5em 0;
-}
-
-.reminder-set-box button {
-    width: 100%;
-    height: 2.5em;
-    border-radius: 5px;
-    background-color: #459090;
-    color: white;
-    border: 4px solid #459090;
-}
-
-.history-area {
-    margin-top: 1em;
-    overflow: hidden;
-}
-
-.history-table-box {
-    font-size: 14px;
-    height: 15em;
-    overflow-y: scroll;
-    margin-right: -1.5em;
-    padding-right: 1em;
-}
-
-.history-row .history-time-box {
-    width: 30%;
-}
-
-.history-row .history-text-box {
-    width: 50%;
-}
-
-.history-text {
-    color: #888888;
-}
-
-.history-button-box {
-    padding: auto;
-}
-
-.history-button {
-    font-size: 16px;
-    width: 100%;
-    height: 2.5em;
-    border-radius: 8px;
-    background-color: #459090;
-    color: white;
-    border: solid 5px #459090;
-}
-
-.history-label {
-    font-size: 20px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    color: #4a4a4a;
 }
 
 @media only screen and (max-width: 600px) {
@@ -262,10 +226,6 @@ button:focus {
     }
 }
 @media only screen and (min-width: 795px) {
-    .setting-area {
-        display: flex;
-    }
-
     .box-wrapper {
         left: calc((100vw - 795px) / 2);
         /* display: block; */
@@ -274,36 +234,10 @@ button:focus {
         left: 50%;
         transform: translate(-50%, -50%) !important;
     }
-
-    .reminder-text-box,
-    .reminder-time-set-box {
-        width: 50%;
-    }
-    git git .reminder-text,
-    .reminder-time-set-box,
-    .reminder-time-label {
-        padding: 0.2em;
-        padding-left: 0.5em;
-        color: #000000;
-    }
-    .reminder-time-label {
-        padding-left: 0;
-    }
 }
 @media only screen and (max-width: 300px) {
     .box-wrapper {
         width: 100%;
     }
-}
-</style>
-
-<style>
-/* CSS for component, put it outside of scope */
-.reminder-time > input {
-    padding: 0.5em;
-    width: 100%;
-    border-radius: 5px;
-    resize: none;
-    border: 4px solid #8fb8b9;
 }
 </style>

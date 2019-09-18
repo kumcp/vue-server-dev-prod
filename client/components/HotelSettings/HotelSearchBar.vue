@@ -12,7 +12,7 @@
             type="text"
             v-model="selectedHotel.name"
             @blur="selectHotelName(selectedHotel.name)"
-            @keypress="showSuggestList"
+            @keydown="showSuggestList"
             class="form-control"
             placeholder="fujutakanko"
             aria-describedby="button-addon2"
@@ -27,7 +27,11 @@
             >
                 <span class="sr-only">Dropdown</span>
             </button>
-            <div class="dropdown-menu dropdown-menu-right dropdown-limit" id="hotel-list">
+            <div
+                class="dropdown-menu dropdown-menu-right dropdown-limit"
+                :class="{ show: showHotelList }"
+                id="hotel-list"
+            >
                 <a
                     class="dropdown-item"
                     v-for="hotel in hotelListFiltered"
@@ -80,13 +84,14 @@ export default {
     },
     data() {
         return {
-            selectedHotel: {}
+            selectedHotel: {},
+            showHotelList: false
         };
     },
     methods: {
         selecteHotel(hotel) {
             this.selectedHotel = { ...hotel };
-            document.getElementById('hotel-list').classList.remove('show');
+            this.showHotelList = false;
             this.$emit('selectedHotel', this.selectedHotel);
         },
         selectHotelId(hotelId) {
@@ -95,13 +100,13 @@ export default {
         },
         selectHotelName(hotelName) {
             const hotelSelected = this.hotelList.filter(hotel => hotel.name === hotelName);
-
+            this.showHotelList = false;
             if (hotelSelected.length === 1) {
                 this.selecteHotel(hotelSelected);
             }
         },
         showSuggestList() {
-            document.getElementById('hotel-list').classList.add('show');
+            this.showHotelList = true;
         }
     },
     computed: {
