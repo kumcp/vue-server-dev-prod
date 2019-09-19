@@ -59,20 +59,20 @@
 
                     <hr />
                     <div class="button-group">
-                        <button
+                        <color-button
                             type="button"
                             class="btn btn-outline-secondary"
                             @click="backPreviousPage"
                         >
                             {{ 'Cancel' }}
-                        </button>
-                        <button
+                        </color-button>
+                        <color-button
                             type="button"
                             class="btn btn-outline-primary"
                             @click="onApplyClicked"
                         >
                             {{ 'Apply' }}
-                        </button>
+                        </color-button>
                     </div>
                 </div>
             </div>
@@ -84,6 +84,7 @@
 import FileInput from './Input/FileInput.vue';
 import HotelSearchBar from './HotelSettings/HotelSearchBar.vue';
 import CheckBox from './Input/CheckBox.vue';
+import ColorButton from './Input/ColorButton.vue';
 
 export default {
     name: 'hotelSettingsBox',
@@ -144,7 +145,8 @@ export default {
     components: {
         FileInput,
         HotelSearchBar,
-        CheckBox
+        CheckBox,
+        ColorButton
     },
     created() {},
     data() {

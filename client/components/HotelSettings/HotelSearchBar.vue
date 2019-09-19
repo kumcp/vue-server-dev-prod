@@ -18,7 +18,7 @@
             aria-describedby="button-addon2"
         />
         <div class="input-group-append">
-            <button
+            <color-button
                 class="btn btn-outline-secondary dropdown-toggle"
                 type="button"
                 data-toggle="dropdown"
@@ -26,7 +26,7 @@
                 aria-expanded="false"
             >
                 <span class="sr-only">Dropdown</span>
-            </button>
+            </color-button>
             <div
                 class="dropdown-menu dropdown-menu-right dropdown-limit"
                 :class="{ show: showHotelList }"
@@ -47,8 +47,11 @@
 <script>
 import 'bootstrap/dist/js/bootstrap.bundle';
 
+import ColorButton from '../Input/ColorButton.vue';
+
 export default {
     name: 'hotelSearchBar',
+    components: [ColorButton],
     props: {
         hotelList: {
             type: [Array],

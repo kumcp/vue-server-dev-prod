@@ -8,9 +8,9 @@
 
             <div class="card-body">
                 <!-- Button to trigger box -->
-                <button type="button" class="btn btn-outline-primary" @click="buttonClicked">
+                <color-button type="button" class="btn btn-outline-primary" @click="buttonClicked">
                     {{ buttonText || 'show Hotel Settings Box' }}
-                </button>
+                </color-button>
 
                 <!-- Settings box component -->
                 <hotel-settings-box
@@ -27,10 +27,14 @@
 </template>
 
 <script>
-import 'bootstrap/dist/css/bootstrap.min.css';
 import HotelSettingsBox from './HotelSettingsBox.vue';
+import ColorButton from './Input/ColorButton.vue';
 
 export default {
+    components: {
+        HotelSettingsBox,
+        ColorButton
+    },
     props: {
         hotelList: {
             type: [Array],
@@ -76,9 +80,7 @@ export default {
             }
         }
     },
-    components: {
-        HotelSettingsBox
-    },
+
     data() {
         return {
             showHotelSettingBox: false,
@@ -101,7 +103,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .template-exporting {
     padding: 6px;
 }

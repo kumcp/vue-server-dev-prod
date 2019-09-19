@@ -1,43 +1,48 @@
 <template>
     <div class="template-exporting">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">{{ title || 'Title' }}</h5>
+        <card-layout>
+            <template v-slot:card-header>
+                <div class="card-title">{{ title }}</div>
                 <div class="card-header-button">
-                    <button
+                    <color-button
                         v-if="downloadButtonText"
                         type="button"
                         class="btn btn-outline-primary"
                         @click="onDownloadClicked"
                     >
                         {{ downloadButtonText }}
-                    </button>
-                    <button
+                    </color-button>
+
+                    <color-button
                         v-if="uploadButtonText"
                         type="button"
                         class="btn btn-outline-primary"
                         @click="onUploadClicked"
                     >
                         {{ uploadButtonText }}
-                    </button>
+                    </color-button>
                 </div>
-            </div>
+            </template>
 
-            <div class="card-body">
+            <template v-slot:card-body>
                 <file-input :fileId="templateId" @fileSelected="onFileSelected"></file-input>
-            </div>
-        </div>
+            </template>
+        </card-layout>
     </div>
 </template>
 
 <script>
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import FileInput from './Input/FileInput.vue';
+import ColorButton from './Input/ColorButton.vue';
+import CardLayout from './ComponentLayout/CardLayout.vue';
 
 export default {
     name: 'templateExporting',
     components: {
-        FileInput
+        FileInput,
+        ColorButton,
+        CardLayout
     },
     props: {
         title: {
@@ -117,7 +122,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .template-exporting {
     padding: 6px;
 }
@@ -125,7 +130,8 @@ export default {
 .template-exporting .card-title {
     display: block;
     float: left;
-    margin-bottom: 0px;
+    padding: 0.3rem;
+    font-size: 1.5rem;
 }
 
 .card-header-button {
