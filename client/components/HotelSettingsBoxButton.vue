@@ -1,12 +1,11 @@
 <template>
     <div class="component-box">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">{{ title || 'Title' }}</h5>
-                <div class="card-header-button"></div>
-            </div>
+        <card-layout>
+            <template v-slot:card-header>
+                <div class="card-title">{{ title }}</div>
+            </template>
 
-            <div class="card-body">
+            <template v-slot:card-body>
                 <!-- Button to trigger box -->
                 <color-button type="button" class="btn btn-outline-primary" @click="buttonClicked">
                     {{ buttonText || 'show Hotel Settings Box' }}
@@ -21,19 +20,21 @@
                     @backPreviousPage="backClicked"
                     @applied="applyHotelSettings"
                 ></hotel-settings-box>
-            </div>
-        </div>
+            </template>
+        </card-layout>
     </div>
 </template>
 
 <script>
 import HotelSettingsBox from './HotelSettingsBox.vue';
 import ColorButton from './Input/ColorButton.vue';
+import CardLayout from './ComponentLayout/CardLayout.vue';
 
 export default {
     components: {
         HotelSettingsBox,
-        ColorButton
+        ColorButton,
+        CardLayout
     },
     props: {
         hotelList: {
@@ -78,14 +79,28 @@ export default {
 
                 return { name: 'destinationhotel' };
             }
+        },
+        title: {
+            type: String,
+            require: false,
+            default: () => {
+                console.error('HotelSettingsBoxButton: Missing title. Generated default');
+                return 'Title';
+            }
+        },
+        buttonText: {
+            type: String,
+            require: false,
+            default: () => {
+                console.error('HotelSettingsBoxButton: Missing buttonText. Generated default');
+                return 'Show Hotel Settings';
+            }
         }
     },
 
     data() {
         return {
-            showHotelSettingBox: false,
-            buttonText: 'show Hotel Settings',
-            title: 'title'
+            showHotelSettingBox: false
         };
     },
     methods: {

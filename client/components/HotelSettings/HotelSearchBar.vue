@@ -51,7 +51,9 @@ import ColorButton from '../Input/ColorButton.vue';
 
 export default {
     name: 'hotelSearchBar',
-    components: [ColorButton],
+    components: {
+        ColorButton
+    },
     props: {
         hotelList: {
             type: [Array],
