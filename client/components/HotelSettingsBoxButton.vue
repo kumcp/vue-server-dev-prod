@@ -52,16 +52,16 @@ export default {
 
                 return [
                     { id: 1, name: 'hotel1' },
-                    { id: 2, name: 'xaa' },
+                    { id: 2, name: 'hotel2' },
                     { id: 3, name: 'hotel3' },
-                    { id: 4, name: 'bbb' },
+                    { id: 4, name: 'hote4' },
                     { id: 5, name: 'hotel5' },
-                    { id: 6, name: 'aaaa' },
+                    { id: 6, name: 'hotel1' },
                     { id: 7, name: 'hotel7' },
                     { id: 8, name: 'bb55' },
                     { id: 9, name: 'hotel9' },
-                    { id: 10, name: 'fujutakanko' },
-                    { id: 11, name: 'fujitakankotest' },
+                    { id: 10, name: 'hotel10' },
+                    { id: 11, name: 'hotel12test' },
                     { id: 12, name: 'hotel12' }
                 ];
             }
