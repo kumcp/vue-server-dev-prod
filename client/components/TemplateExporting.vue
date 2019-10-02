@@ -32,7 +32,6 @@
 </template>
 
 <script>
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import FileInput from './Input/FileInput.vue';
 import ColorButton from './Input/ColorButton.vue';
 import CardLayout from './ComponentLayout/CardLayout.vue';

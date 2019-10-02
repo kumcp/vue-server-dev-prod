@@ -45,8 +45,6 @@
 </template>
 
 <script>
-import 'bootstrap/dist/js/bootstrap.bundle';
-
 import ColorButton from '../Input/ColorButton.vue';
 
 export default {
