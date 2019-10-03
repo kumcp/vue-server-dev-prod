@@ -1,7 +1,6 @@
 <template>
-    <div class="input-group mb-3">
+    <div class="searchbar-group">
         <color-text-input
-            class="form-control"
             type="text"
             v-model="selectedHotel.id"
             @change="selectHotelId(selectedHotel.id)"
@@ -13,7 +12,6 @@
             v-model="selectedHotel.name"
             @blur="selectHotelName(selectedHotel.name)"
             @keydown="showHotelList = true"
-            class="form-control"
             placeholder="hotelname"
         />
         <color-button
@@ -144,12 +142,12 @@ export default {
     overflow: auto;
 }
 
-.input-group > *:first-child {
+.searchbar-group > *:first-child {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
 
-.input-group > *:last-child {
+.searchbar-group > *:last-child {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
