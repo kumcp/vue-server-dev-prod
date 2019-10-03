@@ -42,24 +42,6 @@
 </template>
 
 <script>
-/**
- * A list box component
- * Can Scrollable.
- * Have property:
- * @param size {width, height} to specific the size of list box
- * @param position {top, left} to specific the position of list box
- * @param sentenceList [{id, textShow, ...}] an array contain item with some param
- * other things will be emit to parent component to handle later.
- * @param option
- * {showFilterBar: true/false,
- *  showDeleteButton: true/false,
- *  showId: true/false,
- *  textAlign: "left"/"center"/"right",
- *  focusing: if the showText is the same as focusing, it will be focus,
- *  wrapText: true if want to show ... instead of full text
- * }
- */
-
 export default {
     name: 'sentenceList',
     props: {
@@ -300,41 +282,6 @@ export default {
     components: {},
     mounted() {
         this.validateList();
-        // this.listShow = this.filWithBlankItem(this.list);
-        // if (this.size) {
-        //     const listBox = document.getElementById(this.listId);
-        //     if (this.size.height > 100) {
-        //         listBox.style.maxHeight = `${this.size.height}px`;
-        //         listBox.querySelector('.list-box').style.maxHeight = `${this.size.height}px`;
-        //     }
-        //     if (this.size.width > 100) {
-        //         listBox.style.maxWidth = `${this.size.width}px`;
-        //         listBox.querySelector('.list-box').style.maxWidth = `${this.size.width}px`;
-        //     }
-        //     // let wrapTextDiv = listBox.querySelector(".wrap-text")
-        //     // if (wrapTextDiv) {
-        //     //     wrapTextDiv.style.width = (this.size.width - 30) + "px"
-        //     // }
-        // }
-        // if (this.position) {
-        //     const actualHeight = this.inRange(this.size.height);
-        //     const actualWidth = this.inRange(this.size.width);
-        //     console.log('actualHeight: ', actualHeight);
-        //     console.log('actualWidth: ', actualWidth);
-        //     const listBox = document.getElementById(this.listId);
-        //     listBox.style.left = `${this.position.left - actualWidth}px`;
-        //     if (this.checkControlList || this.isMoBile) {
-        //         listBox.style.marginTop = '-78px';
-        //     }
-        //     listBox.style.top = this.position.top ? `${this.position.top - actualHeight}px` : '';
-        // }
-        // if (this.option) {
-        //     this.showFilterBar = this.option.showFilterBar || false;
-        //     this.showDeleteButton = this.option.showDeleteButton || false;
-        //     this.showId = this.option.showId || false;
-        //     this.textAlign = this.option.textAlign || 'center';
-        //     this.wrapText = this.option.wrapText || false;
-        // }
     },
     data() {
         return {
