@@ -249,6 +249,10 @@ hr {
     border-radius: 10px;
 }
 
+.box-wrapper > * {
+    margin: 0.5em;
+}
+
 @media only screen and (max-width: 600px) {
     .title {
         font-size: 18px;

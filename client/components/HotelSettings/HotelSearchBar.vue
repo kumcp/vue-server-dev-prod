@@ -1,6 +1,6 @@
 <template>
     <div class="input-group mb-3">
-        <input
+        <color-text-input
             class="form-control"
             type="text"
             v-model="selectedHotel.id"
@@ -8,49 +8,55 @@
             @blur="selectHotelId(selectedHotel.id)"
             placeholder="1"
         />
-        <input
+        <color-text-input
             type="text"
             v-model="selectedHotel.name"
             @blur="selectHotelName(selectedHotel.name)"
-            @keydown="showSuggestList"
+            @keydown="showHotelList = true"
             class="form-control"
             placeholder="hotelname"
-            aria-describedby="button-addon2"
         />
-        <div class="input-group-append">
-            <color-button
-                class="btn btn-outline-secondary dropdown-toggle"
-                type="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-            >
-                <span class="sr-only">Dropdown</span>
-            </color-button>
-            <div
-                class="dropdown-menu dropdown-menu-right dropdown-limit"
-                :class="{ show: showHotelList }"
-                id="hotel-list"
-            >
-                <a
+        <color-button
+            class="btn-outline-secondary hotel-list-button"
+            type="button"
+            @click="toggleSuggestList"
+        >
+            <span class="sr-only">V</span>
+        </color-button>
+        <div
+            class="dropdown-menu dropdown-menu-right dropdown-limit"
+            :class="{ show: showHotelList }"
+            id="hotel-list"
+        >
+            <sentence-list
+                v-show="showHotelList"
+                :list="hotelListFiltered"
+                :textShowField="'name'"
+                :focusing="selectedHotel.name"
+                @clickItem="selectHotel"
+            ></sentence-list>
+            <!-- <a
                     class="dropdown-item"
                     v-for="hotel in hotelListFiltered"
                     :key="hotel.id"
-                    @click="selecteHotel(hotel)"
+                    @click="selectHotel(hotel)"
                     >{{ hotel.name }}</a
-                >
-            </div>
+                > -->
         </div>
     </div>
 </template>
 
 <script>
 import ColorButton from '../Input/ColorButton.vue';
+import ColorTextInput from '../Input/ColorTextInput.vue';
+import SentenceList from '../Input/SentenceList.vue';
 
 export default {
     name: 'hotelSearchBar',
     components: {
-        ColorButton
+        ColorButton,
+        ColorTextInput,
+        SentenceList
     },
     props: {
         hotelList: {
@@ -90,24 +96,28 @@ export default {
         };
     },
     methods: {
-        selecteHotel(hotel) {
+        selectHotel(hotel) {
+            if (!hotel) {
+                this.$emit('selectedHotel', this.selectedHotel);
+                return;
+            }
             this.selectedHotel = { id: hotel.id, name: hotel.name };
             this.showHotelList = false;
             this.$emit('selectedHotel', this.selectedHotel);
         },
         selectHotelId(hotelId) {
             const hotelSelected = this.hotelList.find(hotel => hotel.id === parseInt(hotelId, 10));
-            this.selecteHotel(hotelSelected);
+            this.selectHotel(hotelSelected);
         },
         selectHotelName(hotelName) {
             const hotelSelected = this.hotelList.filter(hotel => hotel.name === hotelName);
             this.showHotelList = false;
             if (hotelSelected.length === 1) {
-                this.selecteHotel(hotelSelected[0]);
+                this.selectHotel(hotelSelected[0]);
             }
         },
-        showSuggestList() {
-            this.showHotelList = true;
+        toggleSuggestList() {
+            this.showHotelList = !this.showHotelList;
         }
     },
     computed: {
@@ -124,8 +134,23 @@ export default {
 </script>
 
 <style scoped>
+.hotel-list-button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 .dropdown-limit {
     max-height: 10em;
     overflow: auto;
+}
+
+.input-group > *:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.input-group > *:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 </style>
