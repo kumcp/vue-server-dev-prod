@@ -1,6 +1,10 @@
-# vue-server-dev-prod
+# vue-chat
+
+This is the front-end page
 
 ## Project setup
+
+Install npm module packages (NOTE: this function run in this folder will only install for this package)
 
 ```
 npm install
@@ -9,19 +13,38 @@ npm install
 ### Compiles and hot-reloads for development
 
 ```
-npm run serve
+npm run dev
 ```
 
+In package.json, `dev` is run in port 8082. Feel free to change to any port.
+
 ### Compiles and minifies for production
+
+Please read more detail in the configuration part Section 2.3
 
 ```
 npm run build
 ```
 
+If you want to run in server side render mode, use:
+
+```
+npm run build:ssr
+```
+
+NOTE: in normal case you will not need ssr mode.
+SSR build has been configured in `./build`. And a sample page `src/ssrPage` has been specific
+
 ### Run your tests
 
 ```
 npm run test
+```
+
+#### Run your unit tests
+
+```
+npm run test:unit
 ```
 
 ### Lints and fixes files
@@ -30,15 +53,90 @@ npm run test
 npm run lint
 ```
 
-### Run your unit tests
-
-```
-npm run test:unit
-```
-
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+# STRUCTURE
+
+### Render flow (in client mode) as CSR (normal way)
+
+```
+                    URL
+                     |
+Server               V                                      Client (client render)
++--------------------------------------------+
+|    Express -> Render following             |
+|                       |            +--------------->  HTML + JS + CSS
+|                       V           /        |            |
+|                 entry-server.js  /         |            |        Render
+|                       |         /          |            |
+|                       |        /           |            V
+|                       |       /            |         +------------------------+ (bundle file)
+|                       |      /             |         |       .main.js         | (in dist/main.xxx.js)
+|                       |     /              |         |      client logic      |
+|                       |    /               |         |           |            |
+|                       V   /                |         |           V            |
+|             +-------------------+      (bundled)     |       (App.vue)        |
+|             |                   |   ------------->   |           |            |
+|             |   Server logic    |          |         |           V  ------------> Fallback in client
+|             |  (client logic    |          |         |         router         |
+|             |     fallback)     |          |         |           |            |
+|             |                   |          |         |           |--------------> Components
+|             |                   |          |         |           V            |
+|             +-------------------+          |         |          ...           |
+|                                            |         +------------------------+
++--------------------------------------------+
+
+```
+
+### Render flow (In server) in SSR (Server side renderer)
+
+```
+                    URL
+                     |
+Server               V                                               Client (client render)
++--------------------------------------------+
+|    Express -> Render following             |
+|                       |            +--------------->  HTML (have rendered)
+|                       V           /        |          |         (entry-client.js)
+|                 entry-server.js  /         |          |           Render (next render is
+|                       |         /          |          |                    client render)
+|                       |        /           |          V
+|                       |       /            |         +------------------------+ (bundle file)
+|                  +----+      /             |         |       .main.js         | (in dist/main.xxx.js)
+|        Fallback  |    |     /              |         |      client logic      |
+|                  |    +----/-----------------------> |           |            |
+|                  V        /                |         |           V            |
+|             +-------------------+          |         |       (App.vue)        |
+|             |                   |          |         |           |            |
+|             |   Server logic    |  <---------------- |           V            |
+|             |  (client logic    |      Result HTML   |         router         |
+|             |     fallback)     |          |         |           |            |
+|             |                   |          |         |           |--------------> Components
+|             |                   |          |         |           V            |
+|             +-------------------+          |         |          ...           |
+|                                            |         +------------------------+
++--------------------------------------------+
+
+```
+
+Build processs
+
+```
+
+
+```
+
+# PROJECT CONFIGURATION
+
+## 1. Output file
+
+#### For running in CSR mode (normal way)
+
+#### For running in SSR mode
+
+There're no exactly file out put has been generated. The HTML file will be generated when there're requests
 
 # DETAIL
 

@@ -5,13 +5,22 @@ module.exports = {
     },
     extends: ['plugin:vue/essential', '@vue/airbnb', 'plugin:prettier/recommended'],
     rules: {
-        'prettier/prettier': 'error',
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-        indent: ['error', 4]
+        indent: ['error', 4],
+        'import/no-unresolved': ['off'],
+        camel_case: ['off'],
+        'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
     },
     parserOptions: {
-        parser: 'babel-eslint',
-        ecmaVersion: 2018
-    }
+        parser: 'babel-eslint'
+    },
+    overrides: [
+        {
+            files: ['**/__tests__/*.{j,t}s?(x)'],
+            env: {
+                mocha: true
+            }
+        }
+    ]
 };
