@@ -7,7 +7,7 @@ import PushNotification from './PushNotification';
 // These are common functions used in client side for subscribe user
 // (register event listening on client side).
 
-const { WEB_PUSHER_APP_KEY } = require('../../server/config/public-key.json');
+const { WEB_PUSHER_APP_KEY } = require('../../server/config.example/public-key.json');
 
 /**
  * Initialize Push notification
