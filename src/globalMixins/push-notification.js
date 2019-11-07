@@ -1,13 +1,13 @@
 /* eslint-disable */
 
+import ServiceWorker from './ServiceWorker';
+import PushNotification from './PushNotification';
+
 // A BUNDLE OF HELPER FUNCTION FOR PUSH NOTIFICATION
 // These are common functions used in client side for subscribe user
 // (register event listening on client side).
 
-const { WEB_PUSHER_APP_KEY } = require('../../public/public-key.json');
-
-// global registration
-let registrationGlobal = {};
+const { WEB_PUSHER_APP_KEY } = require('../../server/config/public-key.json');
 
 /**
  * Initialize Push notification
@@ -15,30 +15,20 @@ let registrationGlobal = {};
  * @param Notification
  */
 const initSubscribeUser = async (navigator, Notification) => {
-    if (!(navigator && 'serviceWorker' in navigator)) {
-        console.warn('SW_NOT_SUPPORT: Service worker not supported');
-        throw new Error('SW_NOT_SUPPORT');
-    }
+    await ServiceWorker.registerGlobal(navigator);
 
-    try {
-        const response = await Notification.requestPermission(status => {
-            console.log('Notification permission status:', status);
-        });
-        console.log('Notify Request Permission: ', response);
+    console.log('[Service Worker] registered');
 
-        navigator.serviceWorker.register('/service-worker');
+    const response = await PushNotification.requestPermission();
+    console.log('Notify Request Permission: ', response);
 
-        const registration = await navigator.serviceWorker.ready;
+    const globalPusher = new PushNotification(
+        ServiceWorker.getGlobal().getRegistration().pushManager,
+        Notification,
+        { applicationServerKey: WEB_PUSHER_APP_KEY }
+    );
 
-        console.log('[Service Worker] activated');
-
-        registrationGlobal = registration;
-    } catch (error) {
-        console.log(`SERVICE_WORKER_REGISTATION_FAILED: ${error}`);
-        throw new Error(`SERVICE_WORKER_REGISTATION_FAILED`);
-    }
-
-    return await subscribeUser(registrationGlobal, WEB_PUSHER_APP_KEY);
+    PushNotification.setGlobal(globalPusher);
 };
 
 /**
@@ -50,18 +40,13 @@ const initSubscribeUser = async (navigator, Notification) => {
  * @throws `PERMISSION_DENIED` if user reject to give permission for push manager
  *
  */
-const subscribeUser = async (swRegistration, applicationServerPublicKey) => {
-    const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+const subscribeUser = async () => {
     try {
-        // Get the current subscription data
-        let subscription = await swRegistration.pushManager.getSubscription();
+        const globalPusher = PushNotification.getGlobal();
 
-        if (!subscription) {
-            subscription = await swRegistration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey
-            });
-        }
+        const subscription = await globalPusher.subscribeIfNotExist();
+        console.log('PERMISSION_GRANTED');
+        console.log(subscription);
 
         return subscription;
     } catch (err) {
@@ -80,41 +65,23 @@ const subscribeUser = async (swRegistration, applicationServerPublicKey) => {
  * @param swRegistration
  */
 const unsubscribeUser = async () => {
-    if (!registrationGlobal) {
+    if (!ServiceWorker.getGlobal().getRegistration()) {
         console.warn('USER_NOT_SUBSCRIBED_YET');
         return;
     }
-    const swRegistration = registrationGlobal;
-
-    const subscription = await swRegistration.pushManager.getSubscription();
 
     try {
-        if (subscription) {
-            await subscription.unsubscribe();
-            console.log('User is unsubscribed');
-        }
-        console.log('No subscription');
+        await PushNotification.getGlobal().unsubscribeIfExist();
+        console.log('Unsubscription successful');
     } catch (error) {
         console.log('UNSUBSCRIPTION_FAILED: Error unsubscribing', error);
         throw new Error('UNSUBSCRIPTION_FAILED');
     }
 };
 
-/**
- * Convert URL in base64 to bits
- */
-const urlB64ToUint8Array = base64String => {
-    console.log('UrlB64: ', base64String);
-    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
 
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
+const subsriptionStatus = () => {
+    return Notification.permission
+}
 
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-};
-
-export { initSubscribeUser, subscribeUser, unsubscribeUser };
+export { initSubscribeUser, subscribeUser, unsubscribeUser, subsriptionStatus };

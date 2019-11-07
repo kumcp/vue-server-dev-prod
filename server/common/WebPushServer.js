@@ -6,7 +6,10 @@ const defaultOptions = {
     force: false
 };
 
-class WebPush {
+/**
+ * A class wrapping web-push, and handle server push notification
+ */
+class WebPushServer {
     /**
      * Create global Web Push with passing options
      *
@@ -14,24 +17,24 @@ class WebPush {
      *
      * @param {*} options
      */
-    static initGlobalWebPush(options) {
-        globalWebPush = new WebPush(options);
+    static initGlobal(options) {
+        globalWebPush = new WebPushServer(options);
         return globalWebPush;
     }
 
     /**
      * Set global web push for the whole project (singleton)
-     * You can access by calling `WebPush.getGlobalWebPush()`
+     * You can access by calling `WebPushServer.getGlobalInstance()`
      *
-     * @param {WebPush} webPush passing a global WebPush object
+     * @param {WebPushServer} webPush passing a global WebPush object
      */
-    static setGlobalWebPush(webPush, options = {}) {
+    static setGlobalInstance(webPush, options = {}) {
         const opt = {
             ...defaultOptions,
             ...options
         };
 
-        if (!(webPush instanceof WebPush)) {
+        if (!(webPush instanceof WebPushServer)) {
             console.error('Passing object is not an instance of WebPush');
             throw new Error('NOT_A_WEBPUSH_OBJECT');
         }
@@ -50,9 +53,9 @@ class WebPush {
     /**
      * Get global web push
      *
-     * @returns {WebPush} a global WebPush object
+     * @returns {WebPushServer} a global WebPush object
      */
-    static getGlobalWebPush() {
+    static getGlobalInstance() {
         return globalWebPush;
     }
 
@@ -81,16 +84,16 @@ class WebPush {
         const opt = options || this.options;
 
         if (!opt) {
-            console.error('WebPush options has not been provided yet.');
+            console.error('WebPushServer options has not been provided yet.');
         }
 
         try {
             return await wp.sendNotification(pushSubscription, payload, opt);
         } catch (err) {
-            console.log(err);
+            console.error(err);
             throw new Error('PUSH_NOTIFICATION_ERROR');
         }
     }
 }
 
-module.exports = WebPush;
+module.exports = WebPushServer;

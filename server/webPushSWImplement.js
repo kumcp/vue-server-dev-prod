@@ -1,12 +1,12 @@
 const express = require('express');
 
 // Import WebPush class
-const WebPush = require('./common/WebPush');
+const WebPush = require('./common/WebPushServer');
 
 // Load config
 const webPushConfig = require('./config/webPushMockConfig');
 
-WebPush.initGlobalWebPush(webPushConfig);
+WebPush.initGlobal(webPushConfig);
 
 const subscribers = [];
 
@@ -26,17 +26,23 @@ const attachWebPushURL = app => {
                 message: 'Test',
                 tag: 'Tag'
             });
-            const subsciberKey = JSON.parse(subscriber);
-            return WebPush.getGlobalWebPush().sendPushNotification(subsciberKey, payload);
+            const subscriberKey = JSON.parse(subscriber);
+            return WebPush.getGlobalInstance().sendPushNotification(subscriberKey, payload);
         });
 
         return res.json({ message: 'RECEIVED' });
     });
 
-    app.post('/push/subsribe-user', (req, res) => {
+    app.post('/push/subscribe-user', (req, res) => {
         subscribers.push(JSON.stringify(req.body.endpoint));
 
         return res.json({ message: 'SUBCRIBED' });
+    });
+
+    app.post('/push/unsubscribe-user', (req, res) => {
+        subscribers.filter(subscribe => subscribe !== JSON.stringify(req.body.endpoint));
+
+        return res.json({ message: 'UNSUBCRIBED' });
     });
 };
 

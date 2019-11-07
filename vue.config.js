@@ -37,16 +37,23 @@ module.exports = {
     devServer: {
         proxy: {
             '^/api': {
-                target: 'http://localhost:8081/',
+                target: 'http://localhost:9090/',
                 changeOrigin: true
             },
             '^/static': {
-                target: 'http://localhost:8081/',
+                target: 'http://localhost:9090/',
                 changeOrigin: true
             },
             '^/socket.io': {
-                target: 'http://localhost:8081/',
+                target: 'http://localhost:9090/',
                 ws: true
+            },
+            '^/(service-worker|precache-manifest)': {
+                // Support Service worker. This is register URL + manifest file
+                target: 'http://localhost:9090/'
+            },
+            '^/push/': {
+                target: 'http://localhost:9090/'
             }
         },
         historyApiFallback: {

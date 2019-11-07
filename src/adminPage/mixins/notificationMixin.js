@@ -11,7 +11,19 @@ export default {
             return fetch('/push/send-test-notification', { method: 'GET' });
         },
         subsribeServerNotification(clientEndpoint) {
-            return fetch('/push/subsribe-user', {
+            return fetch('/push/subscribe-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({
+                    endpoint: clientEndpoint
+                })
+            });
+        },
+        unsubsribeServerNotification(clientEndpoint) {
+            return fetch('/push/unsubscribe-user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

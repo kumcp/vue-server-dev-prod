@@ -11,7 +11,7 @@ const app = express();
 
 app.use(serveStatic(`${__dirname}/dist`));
 app.use(express.json());
-const port = process.env.PORT || 8081;
+const port = process.env.PORT || 9090;
 const hostname = '127.0.0.1';
 
 // Using server side render (SSR) for all URL start with /ssr

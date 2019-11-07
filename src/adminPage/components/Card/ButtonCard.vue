@@ -9,14 +9,31 @@
                 <color-button class="btn-outline-primary" @click="onClickSendNotification"
                     >Send Push Notification</color-button
                 >
+                <br />
+                Status:
+                <p v-if="subscribing">Subscribed</p>
+                <p v-else>Unsubscribed</p>
+                <br />
+                <color-button
+                    v-if="!subscribing"
+                    class="btn-outline-primary"
+                    @click="onClickSubscribeNotification"
+                    >Subscribe</color-button
+                >
+                <color-button
+                    v-if="subscribing"
+                    class="btn-outline-primary"
+                    @click="onClickUnsubscribeNotification"
+                    >Unsubscribe</color-button
+                >
             </template>
         </card-layout>
     </div>
 </template>
 
 <script>
-import ColorButton from '../Input/ColorButton.vue';
-import CardLayout from '../ComponentLayout/CardLayout.vue';
+import ColorButton from '@/components/Input/ColorButton.vue';
+import CardLayout from '@/components/ComponentLayout/CardLayout.vue';
 
 export default {
     name: 'ButtonCard',
@@ -39,6 +56,10 @@ export default {
                 console.warn('ButtonCard: Missing buttonText. Generated default');
                 return 'buttonText';
             }
+        },
+        subscribing: {
+            type: Boolean,
+            required: true
         }
     },
     data() {
@@ -48,10 +69,13 @@ export default {
     },
     methods: {
         onClickSendNotification() {
-            if (!this.$listeners.onClickSendNotification) {
-                console.warn('ButtonCard: Missing listener `onClickSendNotification`');
-            }
-            return this.$emit('onClickSendNotification');
+            return this.$emitWarning('onClickSendNotification');
+        },
+        onClickSubscribeNotification() {
+            return this.$emitWarning('onClickSubscribeNotification');
+        },
+        onClickUnsubscribeNotification() {
+            return this.$emitWarning('onClickUnsubscribeNotification');
         }
     }
 };
