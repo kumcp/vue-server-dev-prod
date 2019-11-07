@@ -1,7 +1,7 @@
 // const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
 
 module.exports = {
-    outputDir: '../alexa-skill/dist/chatbot',
+    outputDir: './dist',
     configureWebpack: {
         resolve: {
             alias: {
@@ -9,12 +9,14 @@ module.exports = {
                 '@ssrPage': `${__dirname}/src/ssrPage`,
                 '@adminPage': `${__dirname}/src/adminPage`
             }
-        }
-        // plugins: [new VueSSRServerPlugin()]
+        },
+        plugins: [
+            // new VueSSRServerPlugin(),
+        ]
     },
     pages: {
         // Guest page for all pages relate to Guest side
-        guestPage: {
+        ssrPage: {
             entry: 'src/ssrPage/entry-client.js',
             template: 'public/ssr-page-dev.html',
             filename: 'ssr-page.html'
@@ -35,16 +37,23 @@ module.exports = {
     devServer: {
         proxy: {
             '^/api': {
-                target: 'http://localhost:8081/',
+                target: 'http://localhost:9090/',
                 changeOrigin: true
             },
             '^/static': {
-                target: 'http://localhost:8081/',
+                target: 'http://localhost:9090/',
                 changeOrigin: true
             },
             '^/socket.io': {
-                target: 'http://localhost:8081/',
+                target: 'http://localhost:9090/',
                 ws: true
+            },
+            '^/(service-worker|precache-manifest)': {
+                // Support Service worker. This is register URL + manifest file
+                target: 'http://localhost:9090/'
+            },
+            '^/push/': {
+                target: 'http://localhost:9090/'
             }
         },
         historyApiFallback: {
@@ -53,6 +62,21 @@ module.exports = {
                 { from: /\/test/, to: '/test-page.html' },
                 { from: /\/admin/, to: '/admin-page.html' }
             ]
+        }
+    },
+    pwa: {
+        name: 'My App',
+        themeColor: '#4DBA87',
+        msTileColor: '#000000',
+        appleMobileWebAppCapable: 'yes',
+        appleMobileWebAppStatusBarStyle: 'black',
+
+        // configure the workbox plugin
+        workboxPluginMode: 'InjectManifest',
+        workboxOptions: {
+            // swSrc is required in InjectManifest mode.
+            swSrc: './src/PWA/push-service-worker.js'
+            // ...other Workbox options...
         }
     }
 };

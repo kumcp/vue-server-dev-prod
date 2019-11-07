@@ -229,3 +229,7 @@ module.export = {
 
 // Remember to change vue-router inside entry.
 ```
+
+## Detail about web push.
+
+Please refer [here](./docs/WebPush.md)
