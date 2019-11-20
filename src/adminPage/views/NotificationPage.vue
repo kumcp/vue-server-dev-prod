@@ -36,12 +36,9 @@ export default {
     async mounted() {
         try {
             await initSubscribeUser(navigator, Notification);
-            this.clientEndpoint = await subscribeUser();
+            await this.subscribe();
             console.log('SubscribeUser successfull');
-            console.log(subsriptionStatus());
             this.subscribing = subsriptionStatus() === 'granted';
-
-            this.subsribeServerNotification(this.clientEndpoint);
         } catch (err) {
             console.error(err);
         }

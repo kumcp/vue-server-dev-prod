@@ -1,6 +1,29 @@
 let globalPusher;
 
 class PushNotification {
+    /**
+     * Construct preinput Push Notification key
+     * ```
+     * // pushManager get from ServiceWorker registered:
+     *
+     * const sw = new ServiceWorker(navigator, { path: "/sw" })
+     * const swRegistered = await sw.register()
+     * try {
+     *     await PushNotification.requestPermission();
+     *     const pn = new PushNotification(
+     *         swRegistered.pushManager,
+     *         Notification,
+     *         { applicationServerKey: <WEB_PUSHER_APP_KEY> }
+     *     )
+     * } catch (err) {
+     *    console.log(err)
+     * }
+     *
+     * ```
+     * @param {*} pushManager (ServiceWorkerRegistration.pushManager)
+     * @param {*} notification `Notification` global object from browser
+     * @param {*} options.userVisibleOnly (default: `true`)
+     */
     constructor(pushManager, notification = Notification, options = {}) {
         this.pushManager = pushManager;
         this.notification = notification;
@@ -18,7 +41,7 @@ class PushNotification {
 
     /**
      * Set application server public key
-     * @param {*} applicationServerKey
+     * @param {string} applicationServerKey
      */
     setPublicKey(applicationServerKey) {
         this.options.applicationServerKey = this.urlB64ToUint8Array(applicationServerKey);
@@ -27,11 +50,18 @@ class PushNotification {
     /**
      * Subscribe with parameter has been parsed
      * You may need to use `.subscribeIfNotExist` to avoid some problems
+     *
+     * @returns {PushSubscription}
      */
-    subscribe() {
-        return this.pushManager.subscribe(this.options);
+    subscribe(options = this.options) {
+        return this.pushManager.subscribe(options);
     }
 
+    /**
+     * Get the push subscription
+     *
+     * @returns {PushSubscription}
+     */
     getSubscription() {
         console.log(this.pushManager);
         return this.pushManager.getSubscription();
