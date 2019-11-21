@@ -65,7 +65,7 @@ module.exports = {
         }
     },
     pwa: {
-        name: 'My App',
+        name: 'Dummy App',
         themeColor: '#4DBA87',
         msTileColor: '#000000',
         appleMobileWebAppCapable: 'yes',
@@ -75,7 +75,7 @@ module.exports = {
         workboxPluginMode: 'InjectManifest',
         workboxOptions: {
             // swSrc is required in InjectManifest mode.
-            swSrc: './src/PWA/push-service-worker.js'
+            swSrc: './src/PWA/service-worker.js'
             // ...other Workbox options...
         }
     }
